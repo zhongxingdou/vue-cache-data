@@ -34,7 +34,9 @@
     "dist"
   ],
   "homepage": "https://github.com/zhongxingdou/vue-cache-data#readme",
-  "dependencies": {},
+  "dependencies": {
+    "vue": "^2.0.5"
+  },
   "devDependencies": {
     "babel-eslint": "^6.1.2",
     "babel-plugin-external-helpers": "^6.8.0",
