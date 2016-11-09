@@ -1,28 +1,35 @@
-import { multiply } from '../';
+import VueCacheData from '../';
 import { strictEqual } from 'assert';
+import Vue from 'vue'
 
-describe('multiply', () => {
-  it('returns 0 when either argument is 0', () => {
-    strictEqual(multiply(0, 2), 0);
-    strictEqual(multiply(4, 0), 0);
-  });
+describe('VueCacheData', () => {
+  it('normal', (done) => {
+    let AppCache = new VueCacheData()
 
-  it('returns the value of one number if the other is 1', () => {
-    strictEqual(multiply(1, 8), 8);
-    strictEqual(multiply(5, 1), 5);
-  });
+    let defaultVal = ['NJ', 'JX']
+    let fetchedVal = ['BJ', 'SH', 'SZ', 'GZ']
 
-  it('is commutative', () => {
-    strictEqual(multiply(2, 4), multiply(4, 2));
-  });
+    AppCache.add('stockList', () => defaultVal, function (onSucc) {
+      setTimeout(function () {
+        return onSucc(fetchedVal)
+      }, 0)
+    })
 
-  it('returns the product of the two numbers', () => {
-    strictEqual(multiply(11, 9), 99);
-  });
+    AppCache.init()
 
-  it('handles negative numbers', () => {
-    strictEqual(multiply(-2, 2), -4);
-    strictEqual(multiply(2, -2), -4);
-    strictEqual(multiply(-2, -2), 4);
+    let vm = new Vue({
+      computed: {
+        stockList () {
+          return AppCache.vm.stockList
+        }
+      }
+    })
+
+    vm.$watch('stockList', function () {
+      strictEqual(vm.stockList, fetchedVal)
+      done()
+    })
+
+    strictEqual(vm.stockList, defaultVal)
   });
 });
