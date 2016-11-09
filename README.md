@@ -32,8 +32,3 @@ new Vue ({
   }
 })
 ```
-
-## Contributing
-
-If you think a project built with rollup should be set up differently, open an
-issue to discuss it or create a pull request.
