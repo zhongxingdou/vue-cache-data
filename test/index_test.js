@@ -3,13 +3,15 @@ import { strictEqual } from 'assert'
 import Vue from 'vue'
 
 describe('VueCacheData', () => {
-  let AppCache, defaultVal, fetchedVal, key, val
+  let AppCache, defaultVal, fetchedVal, noLoaderKey, noLoaderVal,
+      needRetryTimes, retryTimesCount,
+      failed3TimesData
 
   before(() => {
     AppCache = new VueCacheData()
     defaultVal = ['NJ', 'JX']
-    key = 'appName'
-    val = 'VueApp'
+    noLoaderKey = 'noLoader'
+    noLoaderVal = 'noLoaderVal'
 
     AppCache.add('stockList', () => defaultVal, function (onSucc) {
       setTimeout(function () {
@@ -17,12 +19,37 @@ describe('VueCacheData', () => {
       }, 0)
     })
 
-    AppCache.add(key, val)
+    AppCache.add('data1', null, function (onSucc) {
+      setTimeout(function () {
+        return onSucc('data1')
+      }, 0)
+    })
+
+    AppCache.add('data2', null, function (onSucc) {
+      setTimeout(function () {
+        return onSucc('data2')
+      }, 0)
+    })
+
+    AppCache.add('failed3TimesData', null, function (onSucc, onFail) {
+      setTimeout(() => {
+        retryTimesCount++
+        if (retryTimesCount === needRetryTimes) {
+          onSucc(failed3TimesData)
+        } else {
+          onFail()
+        }
+      }, 0)
+    })
+
+    AppCache.add(noLoaderKey, noLoaderVal)
 
     AppCache.init()
   })
 
   beforeEach(() => {
+    needRetryTimes = 0
+    retryTimesCount = 0
     fetchedVal = ['BJ', 'SH', 'SZ', 'GZ']
   })
 
@@ -30,13 +57,37 @@ describe('VueCacheData', () => {
     AppCache.set('stockList', defaultVal)
   })
 
+  it('fetchAll() nomral if loading succeed', (done) => {
+    AppCache.fetchAll(['data1', 'data2'], function (data1, data2) {
+      strictEqual(data1, 'data1')
+      strictEqual(data2, 'data2')
+      done()
+    })
+  })
+
+  it('fetch() should retry given times if loading failed', (done) => {
+    needRetryTimes = 3
+    failed3TimesData = '#$#!@$@!$'
+
+    AppCache.fetch('failed3TimesData', (val) => {
+      strictEqual(val, failed3TimesData)
+      done()
+    }, needRetryTimes)
+  })
+
+  it('fetch() should normal for cache data without loader', () => {
+    AppCache.fetch(noLoaderKey, (val) => {
+      strictEqual(noLoaderVal, val)
+    })
+  })
+
   it('get and set no loader value', () => {
-    strictEqual(AppCache.get(key), val)
+    strictEqual(AppCache.get(noLoaderKey), noLoaderVal)
 
     let newVal = 'abcd'
-    AppCache.set(key, newVal)
+    AppCache.set(noLoaderKey, newVal)
 
-    strictEqual(AppCache.get(key), newVal)
+    strictEqual(AppCache.get(noLoaderKey), newVal)
   })
 
   it('normal', (done) => {
@@ -64,10 +115,10 @@ describe('VueCacheData', () => {
     strictEqual(AppCache.vm.stockList, val)
   })
 
-  it('fetch() normal', (done) => {
+  it('refresh() normal', (done) => {
     let newVal = ['YC', 'WLMQ']
     fetchedVal = newVal
-    AppCache.fetch('stockList')
+    AppCache.refresh('stockList')
 
     setTimeout(() => {
       strictEqual(AppCache.vm.stockList, newVal)
