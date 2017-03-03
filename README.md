@@ -2,7 +2,7 @@
 VueCacheData provides reactive cache data and fetched until first access
 
 ## Install
-`npm intall vue-cache-data --save`
+`npm install vue-cache-data --save`
 
 ## Usage
 ```html
