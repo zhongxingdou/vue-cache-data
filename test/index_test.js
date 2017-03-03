@@ -3,17 +3,21 @@ import { strictEqual } from 'assert'
 import Vue from 'vue'
 
 describe('VueCacheData', () => {
-  let AppCache, defaultVal, fetchedVal
+  let AppCache, defaultVal, fetchedVal, key, val
 
   before(() => {
     AppCache = new VueCacheData()
     defaultVal = ['NJ', 'JX']
+    key = 'appName'
+    val = 'VueApp'
 
     AppCache.add('stockList', () => defaultVal, function (onSucc) {
       setTimeout(function () {
         return onSucc(fetchedVal)
       }, 0)
     })
+
+    AppCache.add(key, val)
 
     AppCache.init()
   })
@@ -24,6 +28,15 @@ describe('VueCacheData', () => {
 
   afterEach(() => {
     AppCache.set('stockList', defaultVal)
+  })
+
+  it('get and set no loader value', () => {
+    strictEqual(AppCache.get(key), val)
+
+    let newVal = 'abcd'
+    AppCache.set(key, newVal)
+
+    strictEqual(AppCache.get(key), newVal)
   })
 
   it('normal', (done) => {
@@ -63,6 +76,7 @@ describe('VueCacheData', () => {
   })
 
   it('get() normal', () => {
-    AppCache.get('stockList', defaultVal)
+    let val = AppCache.get('stockList')
+    strictEqual(val, defaultVal)
   })
 })
