@@ -1,6 +1,6 @@
 {
   "name": "vue-cache-data",
-  "version": "1.0.0",
+  "version": "1.1.0",
   "description": "",
   "main": "dist/vue-cache-data.js",
   "module": "dist/vue-cache-data.mjs",
