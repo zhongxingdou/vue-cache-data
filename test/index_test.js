@@ -58,7 +58,7 @@ describe('VueCacheData', () => {
   })
 
   it('fetchAll() nomral if loading succeed', (done) => {
-    AppCache.fetchAll(['data1', 'data2'], function (data1, data2) {
+    AppCache.fetchAll(['data1', 'data2'], function (succeed, data1, data2) {
       strictEqual(data1, 'data1')
       strictEqual(data2, 'data2')
       done()
@@ -69,14 +69,14 @@ describe('VueCacheData', () => {
     needRetryTimes = 3
     failed3TimesData = '#$#!@$@!$'
 
-    AppCache.fetch('failed3TimesData', (val) => {
+    AppCache.fetch('failed3TimesData', (succeed, val) => {
       strictEqual(val, failed3TimesData)
       done()
     }, needRetryTimes)
   })
 
   it('fetch() should normal for cache data without loader', () => {
-    AppCache.fetch(noLoaderKey, (val) => {
+    AppCache.fetch(noLoaderKey, (succeed, val) => {
       strictEqual(noLoaderVal, val)
     })
   })
