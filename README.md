@@ -14,7 +14,10 @@ VueCacheData provides reactive cache data and fetched until first access
 </div>
 ```
 ```javascript
+import Vue from 'vue'
 import VueCacheData from 'vue-cache-data'
+
+Vue.use(VueCacheData)
 
 let AppCache = new VueCacheData()
 

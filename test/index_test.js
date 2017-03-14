@@ -8,6 +8,8 @@ describe('VueCacheData', () => {
       failed3TimesData
 
   before(() => {
+    Vue.use(VueCacheData)
+    
     AppCache = new VueCacheData()
     defaultVal = ['NJ', 'JX']
     noLoaderKey = 'noLoader'
