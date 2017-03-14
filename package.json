@@ -12,7 +12,7 @@
     "build-cov": "rollup -c rollup.config-cov.js",
     "watch": "rollup -c -w",
     "test": "npm run build-cov; mocha",
-    "prepublish": "npm run build; mocha"
+    "prepublish": "npm run build"
   },
   "repository": {
     "type": "git",
