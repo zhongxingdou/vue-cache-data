@@ -1,6 +1,6 @@
 {
   "name": "vue-cache-data",
-  "version": "1.4.0",
+  "version": "1.5.0",
   "description": "",
   "main": "dist/vue-cache-data.js",
   "module": "dist/vue-cache-data.mjs",
@@ -8,10 +8,11 @@
   "scripts": {
     "prebuild": "eslint lib test",
     "build": "rollup -c",
+    "prebuild-cov": "eslint lib test",
+    "build-cov": "rollup -c rollup.config-cov.js",
     "watch": "rollup -c -w",
-    "pretest": "npm run build",
-    "test": "mocha",
-    "prepublish": "npm test"
+    "test": "npm run build-cov; mocha",
+    "prepublish": "npm run build; mocha"
   },
   "repository": {
     "type": "git",
@@ -34,9 +35,7 @@
     "dist"
   ],
   "homepage": "https://github.com/zhongxingdou/vue-cache-data#readme",
-  "dependencies": {
-    "vue": "^2.0.5"
-  },
+  "dependencies": {},
   "devDependencies": {
     "babel-eslint": "^6.1.2",
     "babel-plugin-external-helpers": "^6.8.0",
@@ -49,6 +48,8 @@
     "rollup": "^0.34.7",
     "rollup-plugin-babel": "^2.6.1",
     "rollup-plugin-istanbul": "^1.0.0",
-    "rollup-watch": "^2.5.0"
+    "rollup-watch": "^2.5.0",
+    "vue": "^2.0.5",
+    "yargs": "^7.0.2"
   }
 }
